@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
-   <head><title>Hello world</title></head>
+   <head>
+         <title>Hello world</title>
+         <link rel="stylesheet" href="css/StyleSheet.css">
+                                    </head>
    <script src="/socket.io/socket.io.js"></script>
    <script>
       var socket = io();
@@ -13,16 +16,38 @@
       });
       socket.on('userSet', function(data){
          user = data.username;
-         document.body.innerHTML = '<input type="text" id="message">\
+         document.body.innerHTML = 
+         '<label for="price per month">enter a price per month:</label>\
+         <input type="text" id="price per month">\
+         <label for="start date">enter a start date:</label>\
+         <input type="text" id="start date">\
+         <label for="end date">enter an end date:</label>\
+         <input type="text" id="end date">\
          <button type="button" name="button" onclick="sendMessage()">Send</button>\
+         <button type="button" name="confirmButton" onclick="sendMessage()">Send</button>\
          <div id="message-container"></div>';
+
       });
       function sendMessage(){
-         var msg = document.getElementById('message').value;
-         if(msg){
-            socket.emit('msg', {message: msg, user: user});
+         var msg = document.getElementById('price per month').value;
+         var startDate = document.getElementById('start date').value;
+         var endDate = document.getElementById('end date').value;
+         var data = "price per month is " + msg + " start date will be " + startDate + " end date will be " + startDate;
+         if(data){
+            socket.emit('msg', {message: data, user: user});
          }
       }
+
+      function confirmMessage(){
+         var msg = document.getElementById('price per month').value;
+         var startDate = document.getElementById('start date').value;
+         var endDate = document.getElementById('end date').value;
+         var data = "price per month is " + msg + " start date will be " + startDate + " end date will be " + startDate;
+         if(data){
+            socket.emit('ConfirmMsg', {message: data, user: user});
+         }
+      }
+
       socket.on('newmsg', function(data){
          if(user){
             document.getElementById('message-container').innerHTML +='<div><b>' + data.user + '</b>: ' + data.message + '</div>'
@@ -33,5 +58,6 @@
       <div id="error-container"></div>
       <input id="name" type="text" name="name" value="" placeholder="Enter your name!">
       <button type="button" name="button" onclick="setUsername()">Let me chat!</button>
+
       </body>
    </html>
